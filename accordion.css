@@ -12,14 +12,18 @@
 
 .panel {
     box-sizing: border-box;
+    visibility: visible;
+    transition: visibility .3s;
+}
+
+[data-status="contracted"] .panel {
+    visibility: hidden;
+}
+
+[data-status="disabled"] .panel {
     position: absolute;
     left: 0;
     top: 100%;
     width: 100%;
     visibility: hidden;
-    transition: visibility .3s;
-}
-
-[data-status="open"] .panel {
-    visibility: visible;
 }

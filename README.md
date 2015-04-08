@@ -1,9 +1,9 @@
 accordion
 =========
 
-Panel is absolutely positioned and visibility hidden. The accordion adjusts in height to show and hide the panel.
+Accessible accordion using CSS transition to expand and contract. Aria states are automatically injected. Despends on jQuery.
 
-Groups must be able to leave multiple open or close the active accordion. Groups can have variable height or fix to the tallest accordion.
+
 
 
 Known issues
