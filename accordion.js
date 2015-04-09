@@ -1,7 +1,7 @@
 /*!
  * accordion
- * version: 0.0.0
- * https:
+ * version: 1.0.0
+ * https://stash.c2mpg.com:8443/projects/C2/repos/accordion
  */
 
 /* exported Accordion */
