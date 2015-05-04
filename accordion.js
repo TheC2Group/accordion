@@ -1,6 +1,6 @@
 /*!
  * accordion
- * version: 2.1.1
+ * version: 2.2.0
  * https://stash.c2mpg.com:8443/projects/C2/repos/accordion
  */
 
@@ -22,6 +22,21 @@ var Accordion = (function ($) {
         contracted: 'contracted',
         prefix: 'Accordion-',
         transition: 'height .3s'
+    };
+
+    var focusPanel = function (index) {
+        if (typeof document.createTreeWalker === 'undefinded') return;
+
+        var treeWalker = document.createTreeWalker(
+            this.items[index].panel,
+            NodeFilter.SHOW_ELEMENT,
+            null,
+            false
+        );
+
+        while (treeWalker.nextNode() && document.activeElement != treeWalker.currentNode) {
+            treeWalker.currentNode.focus();
+        }
     };
 
     var focusPreviousTarget = function (index) {
@@ -84,7 +99,7 @@ var Accordion = (function ($) {
         thisItem.$el.removeAttr('style');
 
         if (thisItem.isExpanded) {
-            thisItem.$panel[0].focus();
+            focusPanel.call(this, index);
         }
         else {
             thisItem.$panel.attr('aria-hidden', 'true');
@@ -225,7 +240,6 @@ var Accordion = (function ($) {
             $panel.attr('aria-hidden', !isExpanded);
 
             $target.attr('tabindex', '0');
-            $panel.attr('tabindex', '-1');
 
             var id = $target.attr('id');
             if (!id) {
@@ -243,6 +257,7 @@ var Accordion = (function ($) {
                 target: $target[0],
                 $control: $control,
                 $panel: $panel,
+                panel: $panel[0],
                 isExpanded: isExpanded,
                 inTransition: false
             };

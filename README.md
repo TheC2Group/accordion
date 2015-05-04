@@ -94,15 +94,15 @@ Here is what the markup looks like after accessibility is added with JavaScript.
 <div class="Accordion" role="tablist" aria-multiselectable="true">
     <div class="item" data-status="expanded">
         <div class="target" role="tab" aria-expanded="true" tabindex="0" id="Accordion-1-1">...</div>
-        <div class="panel" role="tabpanel" aria-hidden="false" tabindex="-1" aria-labelledby="Accordion-1-1">...</div>
+        <div class="panel" role="tabpanel" aria-hidden="false" aria-labelledby="Accordion-1-1">...</div>
     </div>
     <div class="item" data-status="contracted">
         <div class="target" role="tab" aria-expanded="false" tabindex="0" id="Accordion-1-2">...</div>
-        <div class="panel" role="tabpanel" aria-hidden="true" tabindex="-1" aria-labelledby="Accordion-1-2">...</div>
+        <div class="panel" role="tabpanel" aria-hidden="true" aria-labelledby="Accordion-1-2">...</div>
     </div>
     <div class="item" data-status="contracted">
         <div class="target" role="tab" aria-expanded="false" tabindex="0" id="Accordion-1-3">...</div>
-        <div class="panel" role="tabpanel" aria-hidden="true" tabindex="-1" aria-labelledby="Accordion-1-3">...</div>
+        <div class="panel" role="tabpanel" aria-hidden="true" aria-labelledby="Accordion-1-3">...</div>
     </div>
 </div>
 ```
@@ -113,15 +113,15 @@ Or if `allowMultiple` is set to `false`.
 <div class="Accordion" role="tablist">
     <div class="item" data-status="expanded">
         <div class="target" role="tab" aria-expanded="true" aria-selected="true" tabindex="0" id="Accordion-2-1">...</div>
-        <div class="panel" role="tabpanel" aria-hidden="false" tabindex="-1" aria-labelledby="Accordion-2-1">...</div>
+        <div class="panel" role="tabpanel" aria-hidden="false" aria-labelledby="Accordion-2-1">...</div>
     </div>
     <div class="item" data-status="contracted">
         <div class="target" role="tab" aria-expanded="false" aria-selected="false" tabindex="0" id="Accordion-2-2">...</div>
-        <div class="panel" role="tabpanel" aria-hidden="true" tabindex="-1" aria-labelledby="Accordion-2-2">...</div>
+        <div class="panel" role="tabpanel" aria-hidden="true" aria-labelledby="Accordion-2-2">...</div>
     </div>
     <div class="item" data-status="contracted">
         <div class="target" role="tab" aria-expanded="false" aria-selected="false" tabindex="0" id="Accordion-2-3">...</div>
-        <div class="panel" role="tabpanel" aria-hidden="true" tabindex="-1" aria-labelledby="Accordion-2-3">...</div>
+        <div class="panel" role="tabpanel" aria-hidden="true" aria-labelledby="Accordion-2-3">...</div>
     </div>
 </div>
 ```
