@@ -1,6 +1,6 @@
 /*!
  * accordion
- * version: 1.0.0
+ * version: 2.0.0
  * https://stash.c2mpg.com:8443/projects/C2/repos/accordion
  */
 
@@ -17,26 +17,49 @@ var Accordion = (function ($) {
         control: '.target',
         panel: '.panel',
         allowMultiple: true,
-        fixedLayout: false,
         attribute: 'data-status',
         expanded: 'expanded',
         contracted: 'contracted',
-        prefix: 'Accordion-'
+        prefix: 'Accordion-',
+        transition: 'height .3s'
+    };
+
+    var transitionEnd = function (index) {
+        var thisItem = this.items[index];
+
+        thisItem.$el.removeAttr('style');
+
+        if (!thisItem.isExpanded) {
+            thisItem.$panel.attr('aria-hidden', 'true');
+        }
+
+        thisItem.inTransition = false;
     };
 
     var expand = function (index) {
         var thisItem = this.items[index];
         if (thisItem.isExpanded) return;
 
-        if (this.opts.fixedLayout) {
-            thisItem.$el.height(this.tallest);
-        } else {
-            thisItem.$el.height(thisItem.fullHeight);
+        var controlHeight = thisItem.$control.outerHeight();
+
+        if (!thisItem.inTransition) {
+            thisItem.$el.height(controlHeight);
+
+            // repaint for iOS, kind of a hack
+            thisItem.el.getBoundingClientRect();
+
+            thisItem.el.style.transition = this.opts.transition;
+
+            thisItem.inTransition = true;
         }
 
         thisItem.$el.attr(this.opts.attribute, this.opts.expanded);
         thisItem.$target.attr('aria-expanded', 'true');
         thisItem.$panel.attr('aria-hidden', 'false');
+
+        var panelHeight = thisItem.$panel.outerHeight();
+
+        thisItem.$el.height(controlHeight + panelHeight);
         thisItem.isExpanded = true;
     };
 
@@ -44,11 +67,25 @@ var Accordion = (function ($) {
         var thisItem = this.items[index];
         if (!thisItem.isExpanded) return;
 
-        thisItem.$el.height(thisItem.controlHeight);
+        var controlHeight = thisItem.$control.outerHeight();
+
+        if (!thisItem.inTransition) {
+            var panelHeight = thisItem.$panel.outerHeight();
+
+            thisItem.$el.height(controlHeight + panelHeight);
+
+            // repaint for iOS, kind of a hack
+            thisItem.el.getBoundingClientRect();
+
+            thisItem.el.style.transition = this.opts.transition;
+
+            thisItem.inTransition = true;
+        }
 
         thisItem.$el.attr(this.opts.attribute, this.opts.contracted);
         thisItem.$target.attr('aria-expanded', 'false');
-        thisItem.$panel.attr('aria-hidden', 'true');
+
+        thisItem.$el.height(controlHeight);
         thisItem.isExpanded = false;
     };
 
@@ -57,8 +94,6 @@ var Accordion = (function ($) {
         var thisItem = this.items[index];
 
         if (thisItem.isExpanded) {
-
-            if (!this.opts.allowMultiple && this.opts.fixedLayout) return;
 
             contract.call(this, index);
             return;
@@ -76,41 +111,6 @@ var Accordion = (function ($) {
         expand.call(this, index);
     };
 
-    var resize = function () {
-        var self = this;
-        var tallest = 0;
-
-        this.items.forEach(function (item) {
-            var controlHeight = item.$control.outerHeight();
-            var panelHeight = item.$panel.outerHeight();
-
-            var fullHeight = controlHeight + panelHeight;
-            if (fullHeight > tallest) {
-                tallest = fullHeight;
-            }
-
-            var height = (item.isExpanded) ? controlHeight + panelHeight : controlHeight;
-            if (height !== item.height && (!self.opts.fixedLayout || !item.isExpanded)) {
-                item.$el.height(height);
-                item.height = height;
-            }
-
-            item.controlHeight = controlHeight;
-            item.fullHeight = fullHeight;
-        });
-
-        this.tallest = tallest;
-
-        if (this.opts.fixedLayout) {
-            this.items.forEach(function (item) {
-                if (item.isExpanded && item.height !== tallest) {
-                    item.$el.height(tallest);
-                    item.height = tallest;
-                }
-            });
-        }
-    };
-
     var bindEvents = function () {
         var self = this;
 
@@ -119,10 +119,10 @@ var Accordion = (function ($) {
                 e.preventDefault();
                 activate.call(self, i);
             });
-        });
 
-        $(window).on('load resize', function () {
-            resize.call(self);
+            item.$el.on('transitionend', function () {
+                transitionEnd.call(self, i);
+            });
         });
     };
 
@@ -152,13 +152,12 @@ var Accordion = (function ($) {
 
             return {
                 $el: $el,
+                el: item,
                 $target: $target,
                 $control: $control,
                 $panel: $panel,
                 isExpanded: isExpanded,
-                height: 0,
-                controlHeight: 0,
-                fullHeight: 0
+                inTransition: false
             };
         });
     };
@@ -170,13 +169,10 @@ var Accordion = (function ($) {
         this.opts = $.extend({}, defaults, options);
 
         this.items = createItems.call(this);
-        this.tallest = 0;
-        resize.call(this);
 
         bindEvents.call(this);
     };
 
-    Group.prototype.resize = resize;
     Group.prototype.activate = activate;
     Group.prototype.expand = expand;
     Group.prototype.contract = contract;
