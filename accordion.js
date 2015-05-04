@@ -1,6 +1,6 @@
 /*!
  * accordion
- * version: 2.1.0
+ * version: 2.1.1
  * https://stash.c2mpg.com:8443/projects/C2/repos/accordion
  */
 
@@ -185,7 +185,8 @@ var Accordion = (function ($) {
                 activate.call(self, i);
             });
 
-            item.$el.on('transitionend', function () {
+            item.$el.on('transitionend', function (e) {
+                if (e.target !== e.delegateTarget) return;
                 transitionEnd.call(self, i);
             });
 
