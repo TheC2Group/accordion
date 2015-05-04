@@ -31,11 +31,11 @@ var options = {
     control: '.target', // in this case the target is also acting as the control
     panel: '.panel',
     allowMultiple: true,
-    fixedLayout: false,
     attribute: 'data-status',
     expanded: 'expanded',
     contracted: 'contracted',
-    prefix: 'Accordion-'
+    prefix: 'Accordion-',
+    transition: 'height .3s'
 };
 
 new Accordion('.Accordion', options);
@@ -71,9 +71,3 @@ new Accordion('.Accordion', {
     control: '.control'
 });
 ```
-
-
-Known issues
-------------
-
-If opening an accordion causes a scrollbar to appear. That scrollbar may cause a change in heights because the viewport size has changed. This viewport resize does not trigger the window resize event.

@@ -1,29 +1,10 @@
 
 .item {
     box-sizing: content-box;
-    position: relative;
     overflow: hidden;
-    transition: height .3s;
 }
 
-.control {
-    position: relative;
-}
-
-.panel {
-    box-sizing: border-box;
-    visibility: visible;
-    transition: visibility .3s;
-}
-
-[data-status="contracted"] .panel {
-    visibility: hidden;
-}
-
+.panel[aria-hidden="true"],
 [data-status="disabled"] .panel {
-    position: absolute;
-    left: 0;
-    top: 100%;
-    width: 100%;
-    visibility: hidden;
+    display: none;
 }
