@@ -1,6 +1,6 @@
 /*!
  * accordion
- * version: 2.0.0
+ * version: 2.1.0
  * https://stash.c2mpg.com:8443/projects/C2/repos/accordion
  */
 
@@ -24,12 +24,69 @@ var Accordion = (function ($) {
         transition: 'height .3s'
     };
 
+    var focusPreviousTarget = function (index) {
+        var previous = index - 1;
+        if (previous < 0) {
+            previous = this.items.length - 1;
+        }
+        this.items[previous].target.focus();
+    };
+
+    var focusNextTarget = function (index) {
+        var next = index + 1;
+        if (next >= this.items.length) {
+            next = 0;
+        }
+        this.items[next].target.focus();
+    };
+
+    var keyEvent = function (e, index) {
+
+        // enter, space
+        if (e.which === 13 || e.which === 32) {
+            e.preventDefault();
+            activate.call(this, index);
+            return;
+        }
+
+        // end
+        if (e.which === 35) {
+            e.preventDefault();
+            this.items[this.items.length - 1].target.focus();
+            return;
+        }
+
+        // home
+        if (e.which === 36) {
+            e.preventDefault();
+            this.items[0].target.focus();
+            return;
+        }
+
+        // left arrow, up arrow
+        if (e.which === 37 || e.which === 38) {
+            e.preventDefault();
+            focusPreviousTarget.call(this, index);
+            return;
+        }
+
+        // right arrow, down arrow
+        if (e.which === 39 || e.which === 40) {
+            e.preventDefault();
+            focusNextTarget.call(this, index);
+            return;
+        }
+    };
+
     var transitionEnd = function (index) {
         var thisItem = this.items[index];
 
         thisItem.$el.removeAttr('style');
 
-        if (!thisItem.isExpanded) {
+        if (thisItem.isExpanded) {
+            thisItem.$panel[0].focus();
+        }
+        else {
             thisItem.$panel.attr('aria-hidden', 'true');
         }
 
@@ -55,6 +112,9 @@ var Accordion = (function ($) {
 
         thisItem.$el.attr(this.opts.attribute, this.opts.expanded);
         thisItem.$target.attr('aria-expanded', 'true');
+        if (!this.opts.allowMultiple) {
+            thisItem.$target.attr('aria-selected', 'true');
+        }
         thisItem.$panel.attr('aria-hidden', 'false');
 
         var panelHeight = thisItem.$panel.outerHeight();
@@ -84,9 +144,14 @@ var Accordion = (function ($) {
 
         thisItem.$el.attr(this.opts.attribute, this.opts.contracted);
         thisItem.$target.attr('aria-expanded', 'false');
+        if (!this.opts.allowMultiple) {
+            thisItem.$target.attr('aria-selected', 'false');
+        }
 
         thisItem.$el.height(controlHeight);
         thisItem.isExpanded = false;
+
+        thisItem.target.focus();
     };
 
     var activate = function (index) {
@@ -115,13 +180,17 @@ var Accordion = (function ($) {
         var self = this;
 
         this.items.forEach(function (item, i) {
-            item.$el.on('click', self.opts.target, function (e) {
+            item.$target.on('click', function (e) {
                 e.preventDefault();
                 activate.call(self, i);
             });
 
             item.$el.on('transitionend', function () {
                 transitionEnd.call(self, i);
+            });
+
+            item.$target.on('keydown', function (e) {
+                keyEvent.call(self, e, i);
             });
         });
     };
@@ -135,25 +204,42 @@ var Accordion = (function ($) {
             var $control = (self.opts.target === self.opts.control) ? $target : $el.find(self.opts.control);
             var $panel = $el.find(self.opts.panel);
 
+            if (!$target.attr('role')) {
+                $target.attr('role', 'tab');
+            }
+
+            if (!$panel.attr('role')) {
+                $panel.attr('role', 'tabpanel');
+            }
+
             var attribute = $el.attr(self.opts.attribute);
             var isExpanded = (attribute === self.opts.expanded);
             if (!attribute) {
                 $el.attr(self.opts.attribute, (isExpanded) ? self.opts.expanded : self.opts.contracted);
             }
             $target.attr('aria-expanded', isExpanded);
+            if (!self.opts.allowMultiple) {
+                $target.attr('aria-selected', isExpanded);
+            }
             $panel.attr('aria-hidden', !isExpanded);
 
-            var id = $panel.attr('id');
+            $target.attr('tabindex', '0');
+            $panel.attr('tabindex', '-1');
+
+            var id = $target.attr('id');
             if (!id) {
                 id = self.opts.prefix + self.count + '-' + (i + 1);
-                $panel.attr('id', id);
+                $target.attr('id', id);
             }
-            $target.attr('aria-controls', id);
+            if (!$panel.attr('aria-labelledby')) {
+                $panel.attr('aria-labelledby', id);
+            }
 
             return {
                 $el: $el,
                 el: item,
                 $target: $target,
+                target: $target[0],
                 $control: $control,
                 $panel: $panel,
                 isExpanded: isExpanded,
@@ -167,6 +253,14 @@ var Accordion = (function ($) {
         this.count = count;
         this.$el = $(el);
         this.opts = $.extend({}, defaults, options);
+
+        if (!this.$el.attr('role')) {
+            this.$el.attr('role', 'tablist');
+        }
+
+        if (this.opts.allowMultiple) {
+            this.$el.attr('aria-multiselectable', 'true');
+        }
 
         this.items = createItems.call(this);
 
