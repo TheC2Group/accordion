@@ -72,6 +72,17 @@ new Accordion('.Accordion', {
 });
 ```
 
+API
+---
+
+```js
+var accordion = new Accordion('.Accordion');
+
+accordion.activate(0);  // toggles accordion to the index
+accordion.expand(0);    // expands accordion to the index
+accordion.contract(0);  // contracts accordion to the index
+```
+
 Accessibility
 -------------
 
