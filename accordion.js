@@ -24,18 +24,26 @@ var Accordion = (function ($) {
         transition: 'height .3s'
     };
 
+    var focusableTags = ['A', 'INPUT', 'SELECT', 'TEXTAREA'];
+
     var focusPanel = function (index) {
         if (typeof document.createTreeWalker === 'undefinded') return;
 
-        var treeWalker = document.createTreeWalker(
+        var iterator = document.createNodeIterator(
             this.items[index].panel,
             NodeFilter.SHOW_ELEMENT,
-            null,
+            function (node) {
+                return (focusableTags.indexOf(node.tagName) > -1) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+            },
             false
         );
 
-        while (treeWalker.nextNode() && document.activeElement != treeWalker.currentNode) {
-            treeWalker.currentNode.focus();
+        var currentNode;
+        while (currentNode = iterator.nextNode()) {
+
+            currentNode.focus();
+
+            if (document.activeElement === currentNode) break;
         }
     };
 
