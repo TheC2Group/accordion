@@ -1,6 +1,6 @@
 /*!
  * accordion
- * version: 2.2.0
+ * version: 2.2.2
  * https://stash.c2mpg.com:8443/projects/C2/repos/accordion
  */
 
@@ -22,29 +22,6 @@ var Accordion = (function ($) {
         contracted: 'contracted',
         prefix: 'Accordion-',
         transition: 'height .3s'
-    };
-
-    var focusableTags = ['A', 'INPUT', 'SELECT', 'TEXTAREA'];
-
-    var focusPanel = function (index) {
-        if (typeof document.createTreeWalker === 'undefinded') return;
-
-        var iterator = document.createNodeIterator(
-            this.items[index].panel,
-            NodeFilter.SHOW_ELEMENT,
-            function (node) {
-                return (focusableTags.indexOf(node.tagName) > -1) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
-            },
-            false
-        );
-
-        var currentNode;
-        while (currentNode = iterator.nextNode()) {
-
-            currentNode.focus();
-
-            if (document.activeElement === currentNode) break;
-        }
     };
 
     var focusPreviousTarget = function (index) {
@@ -107,7 +84,9 @@ var Accordion = (function ($) {
         thisItem.$el.removeAttr('style');
 
         if (thisItem.isExpanded) {
-            focusPanel.call(this, index);
+            thisItem.$panel.find('a, :input').first().each(function () {
+                this.focus();
+            });
         }
         else {
             thisItem.$panel.attr('aria-hidden', 'true');
