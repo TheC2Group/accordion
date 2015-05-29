@@ -21,7 +21,9 @@ var Accordion = (function ($) {
         expanded: 'expanded',
         contracted: 'contracted',
         prefix: 'Accordion-',
-        transition: 'height .3s'
+        transition: 'height .3s',
+        transitionSupport: true,
+        setFocus: 'target'
     };
 
     var focusPreviousTarget = function (index) {
@@ -84,9 +86,11 @@ var Accordion = (function ($) {
         thisItem.$el.removeAttr('style');
 
         if (thisItem.isExpanded) {
-            thisItem.$panel.find('a, :input').first().each(function () {
-                this.focus();
-            });
+            if (this.opts.setFocus === 'first') {
+                thisItem.$panel.find('a, :input').first().each(function () {
+                    this.focus();
+                });
+            }
         }
         else {
             thisItem.$panel.attr('aria-hidden', 'true');
@@ -121,8 +125,14 @@ var Accordion = (function ($) {
 
         var panelHeight = thisItem.$panel.outerHeight();
 
-        thisItem.$el.height(controlHeight + panelHeight);
+        if (this.opts.transitionSupport) {
+            thisItem.$el.height(controlHeight + panelHeight);
+        }
         thisItem.isExpanded = true;
+
+        if (this.opts.setFocus === 'target') {
+            thisItem.target.focus();
+        }
     };
 
     var contract = function (index) {
@@ -150,10 +160,24 @@ var Accordion = (function ($) {
             thisItem.$target.attr('aria-selected', 'false');
         }
 
-        thisItem.$el.height(controlHeight);
+        if (this.opts.transitionSupport) {
+            thisItem.$el.height(controlHeight);
+        }
         thisItem.isExpanded = false;
 
-        thisItem.target.focus();
+        if (!this.opts.transitionSupport) {
+            transitionEnd.call(this, index);
+        }
+    };
+
+    var contractAll = function (skip) {
+        var self = this;
+        this.items.forEach(function (item, i) {
+            if (i === skip) return;
+            if (item.isExpanded) {
+                contract.call(self, i);
+            }
+        });
     };
 
     var activate = function (index) {
@@ -161,18 +185,12 @@ var Accordion = (function ($) {
         var thisItem = this.items[index];
 
         if (thisItem.isExpanded) {
-
             contract.call(this, index);
             return;
         }
 
         if (!this.opts.allowMultiple) {
-            this.items.forEach(function (item, i) {
-                if (i === index) return;
-                if (item.isExpanded) {
-                    contract.call(self, i);
-                }
-            });
+            contractAll.call(this, index);
         }
 
         expand.call(this, index);
@@ -273,6 +291,7 @@ var Accordion = (function ($) {
     Group.prototype.activate = activate;
     Group.prototype.expand = expand;
     Group.prototype.contract = contract;
+    Group.prototype.contractAll = contractAll;
 
     return Group;
 }(jQuery));
