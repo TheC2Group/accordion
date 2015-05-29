@@ -1,6 +1,6 @@
 /*!
  * accordion
- * version: 2.2.2
+ * version: 2.3.0
  * https://stash.c2mpg.com:8443/projects/C2/repos/accordion
  */
 
