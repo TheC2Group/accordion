@@ -1,6 +1,6 @@
 /*!
  * accordion
- * version: 2.3.0
+ * version: 2.3.1
  * https://stash.c2mpg.com:8443/projects/C2/repos/accordion
  */
 
@@ -181,7 +181,6 @@ var Accordion = (function ($) {
     };
 
     var activate = function (index) {
-        var self = this;
         var thisItem = this.items[index];
 
         if (thisItem.isExpanded) {
@@ -201,16 +200,18 @@ var Accordion = (function ($) {
 
         this.items.forEach(function (item, i) {
             item.$target.on('click', function (e) {
+                if (!self._enabled) return;
                 e.preventDefault();
                 activate.call(self, i);
             });
 
             item.$el.on('transitionend', function (e) {
-                if (e.target !== e.delegateTarget) return;
+                if (!self._enabled || e.target !== e.delegateTarget) return;
                 transitionEnd.call(self, i);
             });
 
             item.$target.on('keydown', function (e) {
+                if (!self._enabled) return;
                 keyEvent.call(self, e, i);
             });
         });
@@ -274,6 +275,7 @@ var Accordion = (function ($) {
         this.count = count;
         this.$el = $(el);
         this.opts = $.extend({}, defaults, options);
+        this._enabled = true;
 
         if (!this.$el.attr('role')) {
             this.$el.attr('role', 'tablist');
@@ -292,6 +294,14 @@ var Accordion = (function ($) {
     Group.prototype.expand = expand;
     Group.prototype.contract = contract;
     Group.prototype.contractAll = contractAll;
+    Group.prototype.enable = function () {
+        this._enabled = true;
+        return this;
+    };
+    Group.prototype.disable = function () {
+        this._enabled = false;
+        return this;
+    };
 
     return Group;
 }(jQuery));
