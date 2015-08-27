@@ -1,0 +1,22 @@
+{
+  "name": "accordion",
+  "version": "2.4.0",
+  "description": "Accessible accordion using CSS transition to expand and contract.",
+  "main": "accordion.js",
+  "scripts": {
+    "standalone": "browserify accordion.js --outfile standalone/accordion.js --standalone Accordion --exclude jquery",
+    "dist": "uglifyjs standalone/accordion.js --output standalone/accordion.min.js --comments"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@stash.c2mpg.com:7999/c2/accordion.git"
+  },
+  "keywords": [
+    "accordion"
+  ],
+  "author": "The C2 Group",
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "^2.1.4"
+  }
+}

@@ -1,7 +1,29 @@
 accordion
 =========
 
-Accessible accordion using CSS transition to expand and contract. Aria states are automatically added. Depends on jQuery.
+Accessible accordion using CSS transition to expand and contract. Aria states are automatically added.
+
+
+To get Started
+--------------
+
+### CommonJS
+
+```
+$ git clone ssh://git@stash.c2mpg.com:7999/c2/accordion.git
+```
+
+```js
+var Accordion = require('./accordion.js');
+```
+
+### Browser Global
+
+```html
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="standalone/accordion.js"></script>
+```
+
 
 Basic Example
 -------------
@@ -128,3 +150,9 @@ Or if `allowMultiple` is set to `false`.
     </div>
 </div>
 ```
+
+
+License
+-------
+
+MIT © [The C2 Group](https://c2experience.com)
