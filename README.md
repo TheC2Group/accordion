@@ -1,7 +1,7 @@
 accordion
 =========
 
-Accessible accordion using CSS transition to expand and contract. Aria states are automatically added.
+> Accessible accordion using CSS transition to expand and contract. Aria states are automatically added.
 
 
 To get Started
