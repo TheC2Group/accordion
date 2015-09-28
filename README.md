@@ -10,11 +10,11 @@ To get Started
 ### CommonJS
 
 ```
-$ git clone ssh://git@stash.c2mpg.com:7999/c2/accordion.git
+$ npm install c2-accordion
 ```
 
 ```js
-var Accordion = require('./accordion.js');
+var Accordion = require('c2-accordion');
 ```
 
 ### Browser Global

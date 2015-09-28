@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@stash.c2mpg.com:7999/c2/accordion.git"
+    "url": "git@github.com:TheC2Group/accordion.git"
   },
   "keywords": [
     "accordion"

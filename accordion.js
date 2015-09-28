@@ -1,6 +1,6 @@
 /*!
  * Accordion
- * https://stash.c2mpg.com:8443/projects/C2/repos/accordion
+ * https://github.com/TheC2Group/accordion
  * @version 2.4.0
  * @license MIT (c) The C2 Group (c2experience.com)
  */
