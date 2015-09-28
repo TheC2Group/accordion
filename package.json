@@ -1,5 +1,5 @@
 {
-  "name": "accordion",
+  "name": "c2-accordion",
   "version": "2.4.0",
   "description": "Accessible accordion using CSS transition to expand and contract.",
   "main": "accordion.js",
