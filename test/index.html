@@ -43,6 +43,7 @@
 
             .Accordion .panel {
                 padding: 15px 20px;
+                outline: 0;
             }
         </style>
     </head>
@@ -102,7 +103,8 @@
             new Accordion('.Example1');
 
             new Accordion('.Example2', {
-                allowMultiple: false
+                allowMultiple: false,
+                setFocus: 'panel'
             });
         </script>
     </body>

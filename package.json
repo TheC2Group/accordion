@@ -1,11 +1,12 @@
 {
   "name": "c2-accordion",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "Accessible accordion using CSS transition to expand and contract.",
   "main": "accordion.js",
   "scripts": {
     "standalone": "browserify accordion.js --outfile standalone/accordion.js --standalone Accordion --exclude jquery",
-    "dist": "uglifyjs standalone/accordion.js --output standalone/accordion.min.js --comments"
+    "dist": "uglifyjs standalone/accordion.js --output standalone/accordion.min.js --comments",
+    "build": "npm run standalone && npm run dist"
   },
   "repository": {
     "type": "git",

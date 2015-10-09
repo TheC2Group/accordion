@@ -1,8 +1,8 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Accordion = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
  * Accordion
- * https://stash.c2mpg.com:8443/projects/C2/repos/accordion
- * @version 2.4.0
+ * https://github.com/TheC2Group/accordion
+ * @version 2.5.0
  * @license MIT (c) The C2 Group (c2experience.com)
  */
 
@@ -24,7 +24,7 @@ var defaults = {
     prefix: 'Accordion-',
     transition: 'height .3s',
     transitionSupport: true,
-    setFocus: 'target'
+    setFocus: 'none' // options: none, item, panel, target, control, first
 };
 
 var focusPreviousTarget = function (index) {
@@ -43,17 +43,33 @@ var focusNextTarget = function (index) {
     this.items[next].target.focus();
 };
 
+var setFocusEnd = function (item) {
+    var target = this.opts.setFocus;
+
+    switch (target) {
+        case 'item':
+            item.el.focus();
+            break;
+        case 'panel':
+        case 'target':
+        case 'control':
+            item[target].focus();
+            break;
+        case 'first':
+            item.$panel.find('a, :input').first().each(function () {
+                this.focus();
+            });
+            break;
+    }
+};
+
 var transitionEnd = function (index) {
     var thisItem = this.items[index];
 
     thisItem.$el.removeAttr('style');
 
     if (thisItem.isExpanded) {
-        if (this.opts.setFocus === 'first') {
-            thisItem.$panel.find('a, :input').first().each(function () {
-                this.focus();
-            });
-        }
+        setFocusEnd.call(this, thisItem);
     }
     else {
         thisItem.$panel.attr('aria-hidden', 'true');
@@ -246,7 +262,24 @@ var createItems = function () {
         }
         $panel.attr('aria-hidden', !isExpanded);
 
-        $target.attr('tabindex', '0');
+        switch (self.opts.setFocus) {
+            case 'item':
+                if ($el.attr('tabindex')) return;
+                $el.attr('tabindex', '0');
+                break;
+            case 'panel':
+                if ($panel.attr('tabindex')) return;
+                $panel.attr('tabindex', '0');
+                break;
+            case 'target':
+                if ($target.attr('tabindex')) return;
+                $target.attr('tabindex', '0');
+                break;
+            case 'control':
+                if ($control.attr('tabindex')) return;
+                $control.attr('tabindex', '0');
+                break;
+        }
 
         var id = $target.attr('id');
         if (!id) {
@@ -263,6 +296,7 @@ var createItems = function () {
             $target: $target,
             target: $target[0],
             $control: $control,
+            control: $control[0],
             $panel: $panel,
             panel: $panel[0],
             isExpanded: isExpanded,

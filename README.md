@@ -59,7 +59,7 @@ var options = {
     prefix: 'Accordion-',
     transition: 'height .3s',
     transitionSupport: true,
-    setFocus: 'target' // 'target' or 'first' or 'none'
+    setFocus: 'none' // options: none, item, panel, target, control, first
 };
 
 new Accordion('.Accordion', options);
