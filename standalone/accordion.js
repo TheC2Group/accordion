@@ -265,11 +265,11 @@ var createItems = function () {
         switch (self.opts.setFocus) {
             case 'item':
                 if ($el.attr('tabindex')) return;
-                $el.attr('tabindex', '0');
+                $el.attr('tabindex', '-1');
                 break;
             case 'panel':
                 if ($panel.attr('tabindex')) return;
-                $panel.attr('tabindex', '0');
+                $panel.attr('tabindex', '-1');
                 break;
             case 'target':
                 if ($target.attr('tabindex')) return;
@@ -277,7 +277,7 @@ var createItems = function () {
                 break;
             case 'control':
                 if ($control.attr('tabindex')) return;
-                $control.attr('tabindex', '0');
+                $control.attr('tabindex', '-1');
                 break;
         }
 
