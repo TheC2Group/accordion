@@ -1,12 +1,14 @@
 {
   "name": "c2-accordion",
-  "version": "2.5.2",
+  "version": "2.6.0",
   "description": "Accessible accordion using CSS transition to expand and contract.",
-  "main": "accordion.js",
+  "jsnext:main": "accordion.js",
+  "main": "cjs/accordion.js",
+  "browser": "iife/accordion.js",
   "scripts": {
-    "standalone": "browserify -t [exposify --expose [ --jquery jQuery ]] accordion.js --outfile standalone/accordion.js --standalone Accordion",
-    "dist": "uglifyjs standalone/accordion.js --output standalone/accordion.min.js --comments",
-    "build": "npm run standalone && npm run dist"
+    "iife": "rollup -c rollup-iife.config.js",
+    "cjs": "rollup -c rollup-cjs.config.js",
+    "build": "npm run iife && npm run cjs"
   },
   "repository": {
     "type": "git",
@@ -16,11 +18,13 @@
     "accordion"
   ],
   "author": "The C2 Group",
-  "license": "MIT",
+  "license": "MIT (c) The C2 Group (c2experience.com)",
   "dependencies": {
     "jquery": "^2.1.4"
   },
   "devDependencies": {
-    "exposify": "^0.5.0"
+    "babel-preset-es2015-rollup": "^1.0.0",
+    "rollup": "^0.21.0",
+    "rollup-plugin-babel": "^2.1.0"
   }
 }
