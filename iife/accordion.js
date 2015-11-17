@@ -1,7 +1,7 @@
 /*!
  * c2-accordion
  * git@github.com:TheC2Group/accordion.git
- * @version 2.5.2
+ * @version 2.6.0
  * @license MIT (c) The C2 Group (c2experience.com)
  */
 var Accordion = (function ($) { 'use strict';
