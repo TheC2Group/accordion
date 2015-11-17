@@ -1,14 +1,7 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Accordion = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/*!
- * Accordion
- * https://github.com/TheC2Group/accordion
- * @version 2.5.0
- * @license MIT (c) The C2 Group (c2experience.com)
- */
-
 'use strict';
 
-var $ = jQuery || require('jquery');
+var $ = require('jquery');
+$ = 'default' in $ ? $['default'] : $;
 
 var count = 0;
 
@@ -27,7 +20,7 @@ var defaults = {
     setFocus: 'none' // options: none, item, panel, target, control, first
 };
 
-var focusPreviousTarget = function (index) {
+var focusPreviousTarget = function focusPreviousTarget(index) {
     var previous = index - 1;
     if (previous < 0) {
         previous = this.items.length - 1;
@@ -35,7 +28,7 @@ var focusPreviousTarget = function (index) {
     this.items[previous].target.focus();
 };
 
-var focusNextTarget = function (index) {
+var focusNextTarget = function focusNextTarget(index) {
     var next = index + 1;
     if (next >= this.items.length) {
         next = 0;
@@ -43,7 +36,7 @@ var focusNextTarget = function (index) {
     this.items[next].target.focus();
 };
 
-var setFocusEnd = function (item) {
+var setFocusEnd = function setFocusEnd(item) {
     var target = this.opts.setFocus;
 
     switch (target) {
@@ -63,22 +56,21 @@ var setFocusEnd = function (item) {
     }
 };
 
-var transitionEnd = function (index) {
+var transitionEnd = function transitionEnd(index) {
     var thisItem = this.items[index];
 
     thisItem.$el.removeAttr('style');
 
     if (thisItem.isExpanded) {
         setFocusEnd.call(this, thisItem);
-    }
-    else {
+    } else {
         thisItem.$panel.attr('aria-hidden', 'true');
     }
 
     thisItem.inTransition = false;
 };
 
-var expand = function (index) {
+var expand = function expand(index) {
     var thisItem = this.items[index];
     if (thisItem.isExpanded) return;
 
@@ -114,7 +106,7 @@ var expand = function (index) {
     }
 };
 
-var contract = function (index) {
+var contract = function contract(index) {
     var thisItem = this.items[index];
     if (!thisItem.isExpanded) return;
 
@@ -149,7 +141,7 @@ var contract = function (index) {
     }
 };
 
-var contractAll = function (skip) {
+var contractAll = function contractAll(skip) {
     var self = this;
     this.items.forEach(function (item, i) {
         if (i === skip) return;
@@ -159,7 +151,7 @@ var contractAll = function (skip) {
     });
 };
 
-var activate = function (index) {
+var activate = function activate(index) {
     var thisItem = this.items[index];
 
     if (thisItem.isExpanded) {
@@ -174,7 +166,7 @@ var activate = function (index) {
     expand.call(this, index);
 };
 
-var keyEvent = function (e, index) {
+var keyEvent = function keyEvent(e, index) {
 
     // enter, space
     if (e.which === 13 || e.which === 32) {
@@ -212,7 +204,7 @@ var keyEvent = function (e, index) {
     }
 };
 
-var bindEvents = function () {
+var bindEvents = function bindEvents() {
     var self = this;
 
     this.items.forEach(function (item, i) {
@@ -234,13 +226,13 @@ var bindEvents = function () {
     });
 };
 
-var createItems = function () {
+var createItems = function createItems() {
     var self = this;
 
     return $.map(this.$el.find(this.opts.item), function (item, i) {
         var $el = $(item);
         var $target = $el.find(self.opts.target);
-        var $control = (self.opts.target === self.opts.control) ? $target : $el.find(self.opts.control);
+        var $control = self.opts.target === self.opts.control ? $target : $el.find(self.opts.control);
         var $panel = $el.find(self.opts.panel);
 
         if (!$target.attr('role')) {
@@ -252,9 +244,9 @@ var createItems = function () {
         }
 
         var attribute = $el.attr(self.opts.attribute);
-        var isExpanded = (attribute === self.opts.expanded);
+        var isExpanded = attribute === self.opts.expanded;
         if (!attribute) {
-            $el.attr(self.opts.attribute, (isExpanded) ? self.opts.expanded : self.opts.contracted);
+            $el.attr(self.opts.attribute, isExpanded ? self.opts.expanded : self.opts.contracted);
         }
         $target.attr('aria-expanded', isExpanded);
         if (!self.opts.allowMultiple) {
@@ -305,7 +297,7 @@ var createItems = function () {
     });
 };
 
-var Group = function (el, options) {
+var Group = function Group(el, options) {
     count += 1;
     this.count = count;
     this.$el = $(el);
@@ -339,6 +331,3 @@ Group.prototype.disable = function () {
 };
 
 module.exports = Group;
-
-},{"jquery":undefined}]},{},[1])(1)
-});

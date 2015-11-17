@@ -1,13 +1,6 @@
-/*!
- * Accordion
- * https://github.com/TheC2Group/accordion
- * @version 2.5.2
- * @license MIT (c) The C2 Group (c2experience.com)
- */
-
 'use strict';
 
-var $ = require('jquery');
+import $ from 'jquery';
 
 var count = 0;
 
@@ -337,4 +330,4 @@ Group.prototype.disable = function () {
     return this;
 };
 
-module.exports = Group;
+export default Group;
