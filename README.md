@@ -21,7 +21,7 @@ var Accordion = require('c2-accordion');
 
 ```html
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script src="standalone/accordion.js"></script>
+<script src="iife/accordion.js"></script>
 ```
 
 
