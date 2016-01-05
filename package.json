@@ -1,10 +1,9 @@
 {
   "name": "c2-accordion",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "description": "Accessible accordion using CSS transition to expand and contract.",
   "jsnext:main": "accordion.js",
   "main": "cjs/accordion.js",
-  "browser": "iife/accordion.js",
   "scripts": {
     "iife": "rollup -c rollup-iife.config.js",
     "cjs": "rollup -c rollup-cjs.config.js",
