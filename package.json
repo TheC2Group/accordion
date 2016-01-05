@@ -1,9 +1,10 @@
 {
   "name": "c2-accordion",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "description": "Accessible accordion using CSS transition to expand and contract.",
   "jsnext:main": "accordion.js",
   "main": "cjs/accordion.js",
+  "export": "Accordion",
   "scripts": {
     "iife": "rollup -c rollup-iife.config.js",
     "cjs": "rollup -c rollup-cjs.config.js",
@@ -18,7 +19,12 @@
     "accordion"
   ],
   "author": "The C2 Group",
-  "license": "MIT (c) The C2 Group (c2experience.com)",
+  "license": "MIT",
+  "copyright": "(c) The C2 Group (c2experience.com)",
+  "bugs": {
+    "url": "https://github.com/TheC2Group/accordion/issues"
+  },
+  "homepage": "https://github.com/TheC2Group/accordion",
   "dependencies": {
     "jquery": "^2.1.4"
   },

@@ -4,19 +4,21 @@ const pjson = require('./package.json');
 
 const banner = `/*!
  * ${pjson.name}
- * ${pjson.repository.url}
+ * ${pjson.homepage}
  * @version ${pjson.version}
- * @license ${pjson.license}
+ * @license ${pjson.license} ${pjson.copyright}
  */`;
 
+const filename = pjson['jsnext:main'];
+
 export default {
-    entry: 'accordion.js',
-    dest: 'umd/accordion.js',
+    entry: filename,
+    dest: `umd/${filename}`,
     format: 'umd',
     plugins: [
         babel()
     ],
-    moduleName: 'Accordion',
+    moduleName: pjson['export'],
     banner,
     globals: {
         jquery: 'jQuery'
