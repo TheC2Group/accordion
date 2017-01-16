@@ -59,7 +59,8 @@ var options = {
     prefix: 'Accordion-',
     transition: 'height .3s',
     transitionSupport: true,
-    setFocus: 'none' // options: none, item, panel, target, control, first
+    setFocus: 'none', // options: none, item, panel, target, control, first
+    hashEnabled: false // use hash in URL to open accordion item
 };
 
 new Accordion('.Accordion', options);
@@ -93,6 +94,34 @@ Since the height of the "control" and the height of the "panel" make up the heig
 ```js
 new Accordion('.Accordion', {
     control: '.control'
+});
+```
+
+Example with Hashes
+-------------------
+
+Add the attribute "data-hash" to each item on the accordion.
+
+```html
+<div class="Accordion">
+    <div class="item" data-status="disabled" data-hash="Accordion1">
+        <div class="target">...</div>
+        <div class="panel">...</div>
+    </div>
+    <div class="item" data-status="disabled" data-hash="Accordion2">
+        <div class="target">...</div>
+        <div class="panel">...</div>
+    </div>
+    <div class="item" data-status="disabled" data-hash="Accordion3">
+        <div class="target">...</div>
+        <div class="panel">...</div>
+    </div>
+</div>
+```
+
+```js
+new Accordion('.Accordion', {
+    hashEnabled: true
 });
 ```
 

@@ -22,7 +22,8 @@ var Accordion = (function ($) { 'use strict';
         prefix: 'Accordion-',
         transition: 'height .3s',
         transitionSupport: true,
-        setFocus: 'none' // options: none, item, panel, target, control, first
+        setFocus: 'none', // options: none, item, panel, target, control, first
+        hashEnabled: false
     };
 
     var focusPreviousTarget = function focusPreviousTarget(index) {
@@ -229,6 +230,12 @@ var Accordion = (function ($) { 'use strict';
                 keyEvent.call(self, e, i);
             });
         });
+
+        if (this.opts.hashEnabled) {
+            $(window).on('hashchange', function () {
+                checkHash.call(self);
+            });
+        }
     };
 
     var createItems = function createItems() {
@@ -302,6 +309,21 @@ var Accordion = (function ($) { 'use strict';
         });
     };
 
+    var checkHash = function checkHash() {
+        var _this2 = this;
+
+        if (document.location.hash) {
+            var hashKey = document.location.hash.split('#')[1];
+
+            _this2.items.forEach(function (item, i) {
+                var thisHash = item.el.dataset.hash;
+                if (thisHash === hashKey) {
+                    activate.call(_this2, i);
+                }
+            });
+        }
+    };
+
     var Group = function Group(el, options) {
         count += 1;
         this.count = count;
@@ -320,6 +342,10 @@ var Accordion = (function ($) { 'use strict';
         this.items = createItems.call(this);
 
         bindEvents.call(this);
+
+        if (this.opts.hashEnabled) {
+            checkHash.call(this);
+        }
     };
 
     Group.prototype.activate = activate;
