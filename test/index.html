@@ -73,6 +73,9 @@
                 </div>
             </div>
 
+            <button class="destroy">Destroy Default Accordion</button>
+            <button class="enable">Enable Default Accordion</button>
+
             <h3>Accordion that closes the previously expanded item.</h3>
             <div class="Accordion Example2">
                 <div class="item" data-status="disabled">
@@ -123,16 +126,24 @@
         <script src="../iife/accordion.js"></script>
 
         <script>
-            new Accordion('.Example1');
+            var defaultAcc = new Accordion('.Example1');
 
-            new Accordion('.Example2', {
+            var multipleAcc = new Accordion('.Example2', {
                 allowMultiple: false,
                 setFocus: 'panel'
             });
 
-            new Accordion('.Example3', {
+            var hashAcc = new Accordion('.Example3', {
                 hashEnabled: true,
                 allowMultiple: false
+            });
+
+            $('.destroy').click(function () {
+                defaultAcc.destroy();
+            });
+            
+            $('.enable').click(function() {
+                defaultAcc = new Accordion('.Example1');
             });
         </script>
     </body>

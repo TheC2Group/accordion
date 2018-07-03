@@ -135,6 +135,7 @@ accordion.activate(0);    // toggles accordion to the index
 accordion.expand(0);      // expands accordion to the index
 accordion.contract(0);    // contracts accordion to the index
 accordion.contractAll(0); // contracts all the accordions, the optional parameter is an index that gets ignored
+accordion.destroy()       // removes event listeners and aria properties
 ```
 
 Accessibility

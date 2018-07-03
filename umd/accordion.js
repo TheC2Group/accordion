@@ -1,7 +1,7 @@
 /*!
  * c2-accordion
  * https://github.com/TheC2Group/accordion
- * @version 2.6.2
+ * @version 2.7.1
  * @license MIT (c) The C2 Group (c2experience.com)
  */
 (function (global, factory) {
@@ -235,11 +235,23 @@
             });
         });
 
-        if (this.opts.hashEnabled) {
-            $(window).on('hashchange', function () {
+        $(window).on('hashchange', function () {
+            if (self.opts.hashEnabled && self._enabled) {
                 checkHash.call(self);
-            });
-        }
+            }
+        });
+    };
+
+    var unbindEvents = function unbindEvents() {
+        var self = this;
+
+        this.items.forEach(function (item, i) {
+            item.$target.off('click keydown');
+
+            item.$el.off('transitionend');
+        });
+
+        this._enabled = false;
     };
 
     var createItems = function createItems() {
@@ -293,9 +305,13 @@
             if (!id) {
                 id = self.opts.prefix + self.count + '-' + (i + 1);
                 $target.attr('id', id);
+            } else {
+                $target.attr('data-original-id', true);
             }
             if (!$panel.attr('aria-labelledby')) {
                 $panel.attr('aria-labelledby', id);
+            } else {
+                $panel.attr('data-original-labelledBy', true);
             }
 
             return {
@@ -313,16 +329,51 @@
         });
     };
 
+    var removeAriaAttributes = function removeAriaAttributes() {
+        var self = this;
+
+        this.$el.removeAttr('role aria-multiselectable');
+
+        this.$el.find(this.opts.item).each(function () {
+            var $el = $(this);
+            var $target = $el.find(self.opts.target);
+            var $control = self.opts.target === self.opts.control ? $target : $el.find(self.opts.control);
+            var $panel = $el.find(self.opts.panel);
+
+            $el.removeAttr('tabindex');
+            $target.removeAttr('role aria-expanded aria-selected tabindex');
+            $panel.removeAttr('role aria-hidden tabindex');
+            $control.removeAttr('tabindex');
+
+            if (!$target.attr('data-original-id')) {
+                $target.removeAttr('id');
+            } else {
+                $target.removeAttr('data-original-id');
+            }
+
+            if (!$panel.attr('data-original-labelledBy')) {
+                $panel.removeAttr('aria-labelledby');
+            } else {
+                $panel.removeAttr('data-original-labelledBy');
+            }
+        });
+    };
+
+    var destroy = function destroy() {
+        removeAriaAttributes.call(this);
+        unbindEvents.call(this);
+    };
+
     var checkHash = function checkHash() {
-        var _this2 = this;
+        var self = this;
 
         if (document.location.hash) {
             var hashKey = document.location.hash.split('#')[1];
 
-            _this2.items.forEach(function (item, i) {
+            self.items.forEach(function (item, i) {
                 var thisHash = item.el.dataset.hash;
                 if (thisHash === hashKey) {
-                    activate.call(_this2, i);
+                    activate.call(self, i);
                 }
             });
         }
@@ -364,6 +415,7 @@
         this._enabled = false;
         return this;
     };
+    Group.prototype.destroy = destroy;
 
     return Group;
 
