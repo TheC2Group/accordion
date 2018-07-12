@@ -1,6 +1,6 @@
 {
   "name": "c2-accordion",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "description": "Accessible accordion using CSS transition to expand and contract.",
   "jsnext:main": "accordion.js",
   "main": "cjs/accordion.js",
