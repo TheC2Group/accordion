@@ -32,7 +32,6 @@
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
-    "babel-preset-es2015-rollup": "^3.0.0",
     "browserify": "^16.2.3",
     "acorn": "^6.0.0",
     "rollup": "^1.12.3",
