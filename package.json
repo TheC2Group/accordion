@@ -10,7 +10,7 @@
     "cjs": "rollup -c rollup-cjs.config.js",
     "umd": "rollup -c rollup-umd.config.js",
     "build": "npm run iife && npm run cjs && npm run umd",
-    "bundle-example": "browserify test/js/index.js -o test/bundle/index.js"
+    "bundle-example": "browserify example/js/index.js -o example/bundle/index.js"
   },
   "repository": {
     "type": "git",
