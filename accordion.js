@@ -225,7 +225,7 @@ var bindEvents = function () {
             keyEvent.call(self, e, i);
         });
     });
-    
+
     $(window).on('hashchange', function () {
         if (self.opts.hashEnabled && self._enabled) {
             checkHash.call(self);
