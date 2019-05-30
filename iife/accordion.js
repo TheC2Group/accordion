@@ -1,7 +1,7 @@
 /*!
  * c2-accordion
  * https://github.com/TheC2Group/accordion
- * @version 2.8.0
+ * @version 2.8.2
  * @license MIT (c) The C2 Group (c2experience.com)
  */
 var Accordion = (function ($) {
