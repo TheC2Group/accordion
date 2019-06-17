@@ -199,7 +199,6 @@ var keyEvent = function (e, index) {
 
     // right arrow, down arrow
     if (e.which === 39 || e.which === 40) {
-        if (this.items[index].isExpanded) return;
         e.preventDefault();
         focusNextTarget.call(this, index);
         return;

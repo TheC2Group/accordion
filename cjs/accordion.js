@@ -1,7 +1,7 @@
 /*!
  * c2-accordion
  * https://github.com/TheC2Group/accordion
- * @version 2.8.3
+ * @version 2.8.4
  * @license MIT (c) The C2 Group (c2experience.com)
  */
 'use strict';
@@ -206,7 +206,6 @@ var keyEvent = function keyEvent(e, index) {
 
 
   if (e.which === 39 || e.which === 40) {
-    if (this.items[index].isExpanded) return;
     e.preventDefault();
     focusNextTarget.call(this, index);
     return;
