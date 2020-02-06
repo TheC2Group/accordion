@@ -1,7 +1,7 @@
 {
-  "name": "c2-accordion",
-  "version": "2.8.4",
-  "description": "Accessible accordion using CSS transition to expand and contract.",
+  "name": "vanilla-js-accordion",
+  "version": "1.0.0",
+  "description": "Accessible vanilla JS accordion using CSS transition to expand and contract.",
   "jsnext:main": "accordion.js",
   "main": "cjs/accordion.js",
   "export": "Accordion",
@@ -9,23 +9,15 @@
     "build": "rollup -c rollup.config.js",
     "bundle-example": "browserify example/js/index.js -o example/bundle/index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:TheC2Group/accordion.git"
-  },
   "keywords": [
-    "accordion"
+    "accordion",
+    "vanilla",
+    "accessible"
   ],
   "author": "The C2 Group",
   "license": "MIT",
   "copyright": "(c) The C2 Group (c2experience.com)",
-  "bugs": {
-    "url": "https://github.com/TheC2Group/accordion/issues"
-  },
-  "homepage": "https://github.com/TheC2Group/accordion",
-  "dependencies": {
-    "jquery": ">=3.4.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",

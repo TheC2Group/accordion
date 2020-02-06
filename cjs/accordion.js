@@ -1,14 +1,10 @@
 /*!
- * c2-accordion
- * https://github.com/TheC2Group/accordion
- * @version 2.8.4
+ * vanilla-js-accordion
+ * undefined
+ * @version 1.0.0
  * @license MIT (c) The C2 Group (c2experience.com)
  */
 'use strict';
-
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-var $ = _interopDefault(require('jquery'));
 
 var count = 0;
 var defaults = {
@@ -22,10 +18,45 @@ var defaults = {
   contracted: 'contracted',
   prefix: 'Accordion-',
   transition: 'height .3s',
-  transitionSupport: true,
   setFocus: 'none',
   // options: none, item, panel, target, control, first
-  hashEnabled: false
+  hashEnabled: true
+}; // Pass in the objects to merge as arguments.
+// For a deep extend, set the first argument to `true`.
+
+var extend = function extend() {
+  // Variables
+  var extended = {};
+  var deep = false;
+  var i = 0;
+  var length = arguments.length; // Check if a deep merge
+
+  if (Object.prototype.toString.call(arguments[0]) === '[object Boolean]') {
+    deep = arguments[0];
+    i++;
+  } // Merge the object into the extended object
+
+
+  var merge = function merge(obj) {
+    for (var prop in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+        // If deep merge and property is an object, merge properties
+        if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
+          extended[prop] = extend(true, extended[prop], obj[prop]);
+        } else {
+          extended[prop] = obj[prop];
+        }
+      }
+    }
+  }; // Loop through each object and conduct a merge
+
+
+  for (; i < length; i++) {
+    var obj = arguments[i];
+    merge(obj);
+  }
+
+  return extended;
 };
 
 var focusPreviousTarget = function focusPreviousTarget(index) {
@@ -63,21 +94,19 @@ var setFocusEnd = function setFocusEnd(item) {
       break;
 
     case 'first':
-      item.$panel.find('a, :input').first().each(function () {
-        this.focus();
-      });
+      item.panel.querySelector('a, :input').focus();
       break;
   }
 };
 
 var transitionEnd = function transitionEnd(index) {
   var thisItem = this.items[index];
-  thisItem.$el.removeAttr('style');
+  thisItem.el.removeAttribute('style');
 
   if (thisItem.isExpanded) {
     setFocusEnd.call(this, thisItem);
   } else {
-    thisItem.$panel.attr('aria-hidden', 'true');
+    thisItem.panel.setAttribute('aria-hidden', 'true');
   }
 
   thisItem.inTransition = false;
@@ -86,30 +115,27 @@ var transitionEnd = function transitionEnd(index) {
 var expand = function expand(index) {
   var thisItem = this.items[index];
   if (thisItem.isExpanded) return;
-  var controlHeight = thisItem.$control.outerHeight();
+  var controlHeight = thisItem.control.offsetHeight;
 
   if (!thisItem.inTransition) {
-    thisItem.$el.height(controlHeight); // repaint for iOS, kind of a hack
+    thisItem.el.style.height = controlHeight.toString() + 'px'; //repaint for iOS, kind of a hack
 
     thisItem.el.getBoundingClientRect();
     thisItem.el.style.transition = this.opts.transition;
     thisItem.inTransition = true;
   }
 
-  thisItem.$el.attr(this.opts.attribute, this.opts.expanded);
-  thisItem.$target.attr('aria-expanded', 'true');
+  thisItem.el.setAttribute(this.opts.attribute, this.opts.expanded);
+  thisItem.target.setAttribute('aria-expanded', 'true');
 
   if (!this.opts.allowMultiple) {
-    thisItem.$target.attr('aria-selected', 'true');
+    thisItem.target.setAttribute('aria-selected', 'true');
   }
 
-  thisItem.$panel.attr('aria-hidden', 'false');
-  var panelHeight = thisItem.$panel.outerHeight();
-
-  if (this.opts.transitionSupport) {
-    thisItem.$el.height(controlHeight + panelHeight);
-  }
-
+  thisItem.panel.setAttribute('aria-hidden', 'false');
+  var panelHeight = thisItem.panel.offsetHeight;
+  var totalHeight = controlHeight + panelHeight;
+  thisItem.el.style.height = totalHeight.toString() + 'px';
   thisItem.isExpanded = true;
 
   if (this.opts.setFocus === 'target') {
@@ -120,33 +146,28 @@ var expand = function expand(index) {
 var contract = function contract(index) {
   var thisItem = this.items[index];
   if (!thisItem.isExpanded) return;
-  var controlHeight = thisItem.$control.outerHeight();
+  var controlHeight = thisItem.control.offsetHeight;
 
   if (!thisItem.inTransition) {
-    var panelHeight = thisItem.$panel.outerHeight();
-    thisItem.$el.height(controlHeight + panelHeight); // repaint for iOS, kind of a hack
+    var panelHeight = thisItem.panel.offsetHeight;
+    var totalHeight = controlHeight + panelHeight;
+    thisItem.el.style.height = totalHeight.toString() + 'px'; // repaint for iOS, kind of a hack
 
     thisItem.el.getBoundingClientRect();
     thisItem.el.style.transition = this.opts.transition;
     thisItem.inTransition = true;
   }
 
-  thisItem.$el.attr(this.opts.attribute, this.opts.contracted);
-  thisItem.$target.attr('aria-expanded', 'false');
+  thisItem.el.setAttribute(this.opts.attribute, this.opts.contracted);
+  thisItem.target.setAttribute('aria-expanded', 'false');
 
   if (!this.opts.allowMultiple) {
-    thisItem.$target.attr('aria-selected', 'false');
+    thisItem.target.setAttribute('aria-selected', 'false');
   }
 
-  if (this.opts.transitionSupport) {
-    thisItem.$el.height(controlHeight);
-  }
-
+  thisItem.el.style.height = controlHeight.toString() + 'px';
   thisItem.isExpanded = false;
-
-  if (!this.opts.transitionSupport) {
-    transitionEnd.call(this, index);
-  }
+  transitionEnd.call(this, index);
 };
 
 var contractAll = function contractAll(skip) {
@@ -215,21 +236,21 @@ var keyEvent = function keyEvent(e, index) {
 var bindEvents = function bindEvents() {
   var self = this;
   this.items.forEach(function (item, i) {
-    item.$target.on('click', function (e) {
+    item.target.addEventListener('click', function (e) {
       if (!self._enabled) return;
       e.preventDefault();
       activate.call(self, i);
     });
-    item.$el.on('transitionend', function (e) {
-      if (!self._enabled || e.target !== e.delegateTarget) return;
+    item.el.addEventListener('transitionend', function (e) {
+      if (!self._enabled || e.target !== e.currentTarget) return;
       transitionEnd.call(self, i);
     });
-    item.$target.on('keydown', function (e) {
+    item.target.addEventListener('keydown', function (e) {
       if (!self._enabled) return;
       keyEvent.call(self, e, i);
     });
   });
-  $(window).on('hashchange', function () {
+  window.addEventListener('hashchange', function () {
     if (self.opts.hashEnabled && self._enabled) {
       checkHash.call(self);
     }
@@ -238,89 +259,83 @@ var bindEvents = function bindEvents() {
 
 var unbindEvents = function unbindEvents() {
   this.items.forEach(function (item, i) {
-    item.$target.off('click keydown');
-    item.$el.off('transitionend');
+    item.target.removeEventListener('click', activate);
+    item.target.removeEventListener('keydown', keyEvent);
+    item.el.removeEventListener('transitionend', transitionEnd);
   });
   this._enabled = false;
 };
 
 var createItems = function createItems() {
   var self = this;
-  return $.map(this.$el.find(this.opts.item), function (item, i) {
-    var $el = $(item);
-    var $target = $el.find(self.opts.target);
-    var $control = self.opts.target === self.opts.control ? $target : $el.find(self.opts.control);
-    var $panel = $el.find(self.opts.panel);
+  var itemArray = Array.from(this.el.querySelectorAll(this.opts.item));
+  return itemArray.map(function (item, i) {
+    var el = item;
+    var target = el.querySelector(self.opts.target);
+    var control = self.opts.target === self.opts.control ? target : el.querySelector(self.opts.control);
+    var panel = el.querySelector(self.opts.panel);
 
-    if (!$target.attr('role')) {
-      $target.attr('role', 'tab');
+    if (!target.hasAttribute('role')) {
+      target.setAttribute('role', 'tab');
     }
 
-    if (!$panel.attr('role')) {
-      $panel.attr('role', 'tabpanel');
+    if (!panel.hasAttribute('role')) {
+      panel.setAttribute('role', 'tabpanel');
     }
 
-    var attribute = $el.attr(self.opts.attribute);
+    var attribute = el.getAttribute(self.opts.attribute);
     var isExpanded = attribute === self.opts.expanded;
 
     if (!attribute) {
-      $el.attr(self.opts.attribute, isExpanded ? self.opts.expanded : self.opts.contracted);
+      el.setAttribute(self.opts.attribute, isExpanded ? self.opts.expanded : self.opts.contracted);
     }
 
-    $target.attr('aria-expanded', isExpanded);
+    target.setAttribute('aria-expanded', isExpanded);
 
     if (!self.opts.allowMultiple) {
-      $target.attr('aria-selected', isExpanded);
+      target.setAttribute('aria-selected', isExpanded);
     }
 
-    $panel.attr('aria-hidden', !isExpanded);
+    panel.setAttribute('aria-hidden', !isExpanded);
 
     switch (self.opts.setFocus) {
       case 'item':
-        if ($el.attr('tabindex')) return;
-        $el.attr('tabindex', '-1');
+        if (el.hasAttribute('tabindex')) return;
+        el.setAttribute('tabindex', '-1');
         break;
 
       case 'panel':
-        if ($panel.attr('tabindex')) return;
-        $panel.attr('tabindex', '-1');
+        if (panel.hasAttribute('tabindex')) return;
+        panel.setAttribute('tabindex', '-1');
         break;
 
       case 'target':
-        if ($target.attr('tabindex')) return;
-        $target.attr('tabindex', '0');
+        if (target.hasAttribute('tabindex')) return;
+        target.setAttribute('tabindex', '0');
         break;
 
       case 'control':
-        if ($control.attr('tabindex')) return;
-        $control.attr('tabindex', '-1');
+        if (control.hasAttribute('tabindex')) return;
+        control.setAttribute('tabindex', '-1');
         break;
     }
 
-    var id = $target.attr('id');
+    var id = target.getAttribute('id');
 
     if (!id) {
       id = self.opts.prefix + self.count + '-' + (i + 1);
-      $target.attr('id', id);
-    } else {
-      $target.attr('data-original-id', true);
+      target.setAttribute('id', id);
     }
 
-    if (!$panel.attr('aria-labelledby')) {
-      $panel.attr('aria-labelledby', id);
-    } else {
-      $panel.attr('data-original-labelledBy', true);
+    if (!panel.hasAttribute('aria-labelledby')) {
+      panel.setAttribute('aria-labelledby', id);
     }
 
     return {
-      $el: $el,
       el: item,
-      $target: $target,
-      target: $target[0],
-      $control: $control,
-      control: $control[0],
-      $panel: $panel,
-      panel: $panel[0],
+      target: target,
+      control: control,
+      panel: panel,
       isExpanded: isExpanded,
       inTransition: false
     };
@@ -329,28 +344,21 @@ var createItems = function createItems() {
 
 var removeAriaAttributes = function removeAriaAttributes() {
   var self = this;
-  this.$el.removeAttr('role aria-multiselectable');
-  this.$el.find(this.opts.item).each(function () {
-    var $el = $(this);
-    var $target = $el.find(self.opts.target);
-    var $control = self.opts.target === self.opts.control ? $target : $el.find(self.opts.control);
-    var $panel = $el.find(self.opts.panel);
-    $el.removeAttr('tabindex');
-    $target.removeAttr('role aria-expanded aria-selected tabindex');
-    $panel.removeAttr('role aria-hidden tabindex');
-    $control.removeAttr('tabindex');
-
-    if (!$target.attr('data-original-id')) {
-      $target.removeAttr('id');
-    } else {
-      $target.removeAttr('data-original-id');
-    }
-
-    if (!$panel.attr('data-original-labelledBy')) {
-      $panel.removeAttr('aria-labelledby');
-    } else {
-      $panel.removeAttr('data-original-labelledBy');
-    }
+  this.el.removeAttribute('role');
+  this.el.removeAttribute('aria-multiselectable');
+  this.el.querySelectorAll(this.opts.item).forEach(function (el) {
+    var target = el.querySelector(self.opts.target);
+    var control = self.opts.target === self.opts.control ? target : el.querySelector(self.opts.control);
+    var panel = el.querySelector(self.opts.panel);
+    el.removeAttribute('tabindex');
+    target.removeAttribute('role');
+    target.removeAttribute('aria-expanded');
+    target.removeAttribute('aria-selected');
+    target.removeAttribute('tabindex');
+    panel.removeAttribute('role');
+    panel.removeAttribute('aria-hidden');
+    panel.removeAttribute('tabindex');
+    control.removeAttribute('tabindex');
   });
 };
 
@@ -365,7 +373,7 @@ var checkHash = function checkHash() {
   if (document.location.hash) {
     var hashKey = document.location.hash.split('#')[1];
     self.items.forEach(function (item, i) {
-      var thisHash = item.el.dataset.hash;
+      var thisHash = item.target.getAttribute('id');
 
       if (thisHash === hashKey) {
         activate.call(self, i);
@@ -377,16 +385,16 @@ var checkHash = function checkHash() {
 var Group = function Group(el, options) {
   count += 1;
   this.count = count;
-  this.$el = $(el);
-  this.opts = $.extend({}, defaults, options);
+  this.el = el;
+  this.opts = extend(defaults, options);
   this._enabled = true;
 
-  if (!this.$el.attr('role')) {
-    this.$el.attr('role', 'tablist');
+  if (!this.el.hasAttribute('role')) {
+    this.el.setAttribute('role', 'tablist');
   }
 
   if (this.opts.allowMultiple) {
-    this.$el.attr('aria-multiselectable', 'true');
+    this.el.setAttribute('aria-multiselectable', 'true');
   }
 
   this.items = createItems.call(this);

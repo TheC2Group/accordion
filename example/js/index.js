@@ -1,22 +1,20 @@
-var $ = require('jquery');
 var Accordion = require('../../cjs/accordion.js');
 
-var defaultAcc = new Accordion('.Example1');
+var defaultAcc = new Accordion(document.querySelector('.Example1'));
 
-var multipleAcc = new Accordion('.Example2', {
+var multipleAcc = new Accordion(document.querySelector('.Example2'), {
     allowMultiple: false,
     setFocus: 'panel'
 });
 
-var hashAcc = new Accordion('.Example3', {
-    hashEnabled: true,
+var hashAcc = new Accordion(document.querySelector('.Example3'), {
     allowMultiple: false
 });
 
-$('.destroy').click(function () {
+document.querySelector('.destroy').addEventListener('click', function () {
     defaultAcc.destroy();
 });
 
-$('.enable').click(function() {
-    defaultAcc = new Accordion('.Example1');
+document.querySelector('.enable').addEventListener('click', function() {
+    defaultAcc = new Accordion(document.querySelector('.Example1'));
 });
