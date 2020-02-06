@@ -10,16 +10,17 @@ To get Started
 ### CommonJS
 
 ```
-$ npm install vanilla-js-accordion
+$ npm install c2-accordion
 ```
 
 ```js
-var Accordion = require('vanilla-js-accordion');
+var Accordion = require('c2-accordion');
 ```
 
 ### Browser Global
 
 ```html
+<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
 <script src="iife/accordion.js"></script>
 ```
 
@@ -57,8 +58,9 @@ var options = {
     contracted: 'contracted',
     prefix: 'Accordion-',
     transition: 'height .3s',
+    transitionSupport: true,
     setFocus: 'none', // options: none, item, panel, target, control, first
-    hashEnabled: true // use hash in URL to open accordion item
+    hashEnabled: false // use hash in URL to open accordion item
 };
 
 new Accordion('.Accordion', options);
@@ -95,33 +97,39 @@ new Accordion('.Accordion', {
 });
 ```
 
-Example with Custom IDs
------------------------
+Example with Hashes
+-------------------
 
-Add an ID to each accordion target and an aria-labelledby attribute to each panel.
+Add the attribute "data-hash" to each item on the accordion.
 
 ```html
 <div class="Accordion">
-    <div class="item" data-status="disabled">
-        <div class="target" id="Uno">...</div>
-        <div class="panel" aria-labelledby="Uno">...</div>
+    <div class="item" data-status="disabled" data-hash="Accordion1">
+        <div class="target">...</div>
+        <div class="panel">...</div>
     </div>
-    <div class="item" data-status="disabled">
-        <div class="target" id="Dos">...</div>
-        <div class="panel" aria-labelledby="Dos">...</div>
+    <div class="item" data-status="disabled" data-hash="Accordion2">
+        <div class="target">...</div>
+        <div class="panel">...</div>
     </div>
-    <div class="item" data-status="disabled">
-        <div class="target" id="Tres">...</div>
-        <div class="panel" aria-labelledby="Tres">...</div>
+    <div class="item" data-status="disabled" data-hash="Accordion3">
+        <div class="target">...</div>
+        <div class="panel">...</div>
     </div>
 </div>
+```
+
+```js
+new Accordion('.Accordion', {
+    hashEnabled: true
+});
 ```
 
 API
 ---
 
 ```js
-var accordion = new Accordion(document.querySelector('.Example1'));
+var accordion = new Accordion('.Accordion');
 
 accordion.activate(0);    // toggles accordion to the index
 accordion.expand(0);      // expands accordion to the index
@@ -172,14 +180,6 @@ Or if `allowMultiple` is set to `false`.
     </div>
 </div>
 ```
-
-For Developers Working on this Module
--------------------------------------
-
-* After you pull down the project, run `npm install` to get all of the node modules
-* You will want to work in the accordion.js file in the root
-* To compile your changes, run `npm run build` (creates the CJS, IIFE and UMD versions of the module), then `npm run bundle-example` (creates the example file)
-* To test your changes, open example/index.html in a browser
 
 
 License
